@@ -1,7 +1,6 @@
 package app.cellphone.ui;
 
 import java.awt.BorderLayout;
-import java.awt.print.Book;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -53,6 +52,11 @@ public class PhoneManager extends JFrame {
 		setLayout(new BorderLayout());
 		add(new JScrollPane(table), BorderLayout.CENTER);
 		add(buttonPanel, BorderLayout.SOUTH);
+		
+		addButton.addActionListener(e -> {
+			AddPhoneDialog addDialog = new AddPhoneDialog(this, this.tableModel);
+			addDialog.setVisible(true);
+		});
 	}
 	
 	private void clearTable() {
@@ -70,7 +74,7 @@ public class PhoneManager extends JFrame {
 		}
 	}
 	
-	private void insertPhone(PhoneDto phoneDto) {
+	void insertPhone(PhoneDto phoneDto) {
 		int ret = phoneDao.insertPhone(phoneDto);
 		
 		if(ret > 0) {
