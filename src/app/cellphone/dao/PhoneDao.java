@@ -125,23 +125,23 @@ public class PhoneDao {
 		return list;
 	}
 	
-	public PhoneDto detailPhone(String name) {
-		String selectSql = "SELECT * FROM PHONE WHERE NAME LIKE ?";
+	public List<PhoneDto> detailPhone(String name) {
+		String selectSql = "SELECT * FROM PHONE WHERE NAME LIKE ?;";
 		
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		PhoneDto phoneDto = null;
+		List<PhoneDto> list = new ArrayList<>();
 		
 		try {
 			con = DBManager.getConnection();
-			pstmt = con.prepareStatement("%" + selectSql + "%");
+			pstmt = con.prepareStatement(selectSql);
 			
-			pstmt.setString(1, name);
+			pstmt.setString(1, "%" + name + "%");
 			rs = pstmt.executeQuery();
 			
-			if(rs.next()) {
-				phoneDto = new PhoneDto();
+			while(rs.next()) {
+				PhoneDto phoneDto = new PhoneDto();
 				
 				phoneDto.setPhoneId(rs.getInt("phone_id"));
 				phoneDto.setBrand(rs.getString("brand"));
@@ -149,6 +149,7 @@ public class PhoneDao {
 				phoneDto.setPrice(rs.getInt("price"));
 				phoneDto.setCount(rs.getInt("count"));
 				
+				list.add(phoneDto);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -156,7 +157,7 @@ public class PhoneDao {
 			DBManager.releaseConnection(rs, pstmt, con);
 		}
 		
-		return phoneDto;
+		return list;
 	}
 	
 	public PhoneDto detailPhone(int phoneId) {

@@ -105,8 +105,8 @@ public class LoginManager extends JFrame {
 		JPanel inputPanel = new JPanel();
 		inputPanel.setLayout(new GridLayout(2, 2));
 		
-		JTextField adminUsername = new JTextField();
-		JTextField adminPassword = new JTextField();
+		JTextField username = new JTextField();
+		JTextField password = new JTextField();
 		
 		JPanel buttonPanel = new JPanel();
 		JButton loginButton = new JButton("로그인");
@@ -114,18 +114,34 @@ public class LoginManager extends JFrame {
 		buttonPanel.add(loginButton);
 		
 		inputPanel.add(new JLabel("User Username"));
-		inputPanel.add(adminUsername);
+		inputPanel.add(username);
 		inputPanel.add(new JLabel("User Password"));
-		inputPanel.add(adminPassword);
+		inputPanel.add(password);
 		
 		panel.add(inputPanel);
 		panel.add(buttonPanel);
+		
+		loginButton.addActionListener(e -> {
+			UserDto userDto = userLogin(username.getText(), password.getText());
+			
+			if(userDto != null) {
+				PhoneBuyingManager phoneBuyingManager = new PhoneBuyingManager(userDto.getUserId());
+				phoneBuyingManager.setVisible(true);
+				dispose();
+			} else {
+				JOptionPane.showMessageDialog(this, "아이디 혹은 패스워드가 일치하지 않습니다.");
+			}
+		});
 		
 		return panel;
 	}
 	
 	private AdminDto adminLogin(String username, String password) {
 		return loginDao.detailAdmin(username, password);
+	}
+	
+	private UserDto userLogin(String username, String password) {
+		return loginDao.detailUser(username, password);
 	}
 	
 	public static void main(String[] args) {
