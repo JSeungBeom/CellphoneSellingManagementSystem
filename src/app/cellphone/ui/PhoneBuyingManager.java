@@ -14,7 +14,9 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+import app.cellphone.dao.OrderDao;
 import app.cellphone.dao.PhoneDao;
+import app.cellphone.dto.OrderDto;
 import app.cellphone.dto.PhoneDto;
 
 public class PhoneBuyingManager extends JFrame {
@@ -23,6 +25,7 @@ public class PhoneBuyingManager extends JFrame {
 	private DefaultTableModel tableModel;
 	private JTextField searchWordField;
 	private PhoneDao phoneDao = new PhoneDao();
+	private OrderDao orderDao = new OrderDao();
 	private JButton searchButton, buyButton, listButton, viewOrderButton;
 	
 	public PhoneBuyingManager(int userId) {
@@ -118,5 +121,15 @@ public class PhoneBuyingManager extends JFrame {
 	
 	PhoneDto detailPhone(int phoneId) {
 		return phoneDao.detailPhone(phoneId);
+	}
+	
+	int OrderPhone(OrderDto orderDto) {
+		int ret = orderDao.insertOrder(orderDto);
+		
+		if(ret > 0) {
+			listPhone();
+		}
+		
+		return ret;
 	}
 }
