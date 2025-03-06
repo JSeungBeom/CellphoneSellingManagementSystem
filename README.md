@@ -20,8 +20,6 @@ JDBC와 Swing을 이용한 2 Tier Architecture의 휴대폰 판매관리 시스�
 <br />
 
 ## 🛠️ 프로젝트 아키텍쳐
-![no-image](https://user-images.githubusercontent.com/80824750/208294567-738dd273-e137-4bbf-8307-aff64258fe03.png)
-
 
 
 <br />
