@@ -96,7 +96,7 @@ public class OrderDao {
 			
 			rs = pstmt.executeQuery();
 			
-			while(!rs.next()) {
+			while(rs.next()) {
 				int orderId = rs.getInt("order_id");
 				int phoneId = rs.getInt("phone_id");
 				int saleprice = rs.getInt("saleprice");

@@ -90,6 +90,11 @@ public class PhoneBuyingManager extends JFrame {
 			}
 		});
 		
+		viewOrderButton.addActionListener(e -> {
+			ViewOrderDialog viewDialog = new ViewOrderDialog(this, userId);
+			viewDialog.setVisible(true);
+		});
+		
 		listButton.addActionListener( e -> listPhone() );
 	}
 	
@@ -123,7 +128,7 @@ public class PhoneBuyingManager extends JFrame {
 		return phoneDao.detailPhone(phoneId);
 	}
 	
-	int OrderPhone(OrderDto orderDto) {
+	int orderPhone(OrderDto orderDto) {
 		int ret = orderDao.insertOrder(orderDto);
 		
 		if(ret > 0) {

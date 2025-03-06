@@ -21,7 +21,6 @@ public class PhoneManager extends JFrame {
 	private JTable table;
 	private DefaultTableModel tableModel; 
 	private JButton addButton, editButton, listButton;
-	private JTextField searchWordField;
 	private PhoneDao phoneDao = new PhoneDao();
 	
 	public PhoneManager() {

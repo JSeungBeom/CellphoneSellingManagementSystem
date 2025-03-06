@@ -84,7 +84,7 @@ public class BuyPhoneDialog extends JDialog {
 			orderDto.setOrdercount(ordercount);
 			orderDto.setOrderdate(orderdate);
 			
-			int ret = parent.OrderPhone(orderDto);
+			int ret = parent.orderPhone(orderDto);
 			
 			if(ret == -1) {
 				JOptionPane.showMessageDialog(this, "재고 수량을 확인해주세요!");
