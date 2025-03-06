@@ -2,7 +2,11 @@ package app.cellphone.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import app.cellphone.common.DBManager;
 import app.cellphone.dto.OrderDto;
@@ -74,5 +78,42 @@ public class OrderDao {
 		}
 		
 		return ret;
+	}
+	
+	public List<OrderDto> listOrder(int userId) {
+		String selectSql = "SELECT * FROM ORDERS WHERE USER_ID = ?";
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<OrderDto> list = new ArrayList<>();
+		
+		
+		try {
+			con = DBManager.getConnection();
+			pstmt = con.prepareStatement(selectSql);
+			
+			pstmt.setInt(1, userId);
+			
+			rs = pstmt.executeQuery();
+			
+			while(!rs.next()) {
+				int orderId = rs.getInt("order_id");
+				int phoneId = rs.getInt("phone_id");
+				int saleprice = rs.getInt("saleprice");
+				int ordercount = rs.getInt("ordercount");
+				Timestamp orderdate = rs.getTimestamp("orderdate");
+				
+				OrderDto orderDto = new OrderDto(orderId, userId, phoneId,
+						saleprice, ordercount, orderdate);
+				
+				list.add(orderDto);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBManager.releaseConnection(rs, pstmt, con);
+		}
+		
+		return list;
 	}
 }
