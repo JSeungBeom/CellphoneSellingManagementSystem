@@ -91,7 +91,7 @@ public class PhoneBuyingManager extends JFrame {
 		});
 		
 		viewOrderButton.addActionListener(e -> {
-			ViewOrderDialog viewDialog = new ViewOrderDialog(this, userId);
+			UserViewOrderDialog viewDialog = new UserViewOrderDialog(this, userId);
 			viewDialog.setVisible(true);
 		});
 		

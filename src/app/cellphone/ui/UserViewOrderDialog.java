@@ -12,13 +12,13 @@ import javax.swing.table.DefaultTableModel;
 import app.cellphone.dao.OrderDao;
 import app.cellphone.dto.OrderDto;
 
-public class ViewOrderDialog extends JDialog {
+public class UserViewOrderDialog extends JDialog {
 	
 	private JTable table;
 	private DefaultTableModel tableModel;
 	private OrderDao orderDao = new OrderDao();
 	
-	public ViewOrderDialog(PhoneBuyingManager parent, int userId) {
+	public UserViewOrderDialog(PhoneBuyingManager parent, int userId) {
 		setTitle("Order View Dialog");
 		setSize(800, 400);
 		setLayout(new BorderLayout());
