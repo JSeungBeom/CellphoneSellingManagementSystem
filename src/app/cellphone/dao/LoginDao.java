@@ -13,7 +13,7 @@ public class LoginDao {
 	
 	public int insertUser(UserDto userDto) {
 		int ret = -1;
-		String insertSql = "INSERT INTO USER VALUES (?, ?, ?)";
+		String insertSql = "INSERT INTO USER(USERNAME, PASSWORD) VALUES (?, ?)";
 		
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -22,9 +22,8 @@ public class LoginDao {
 			con = DBManager.getConnection();
 			pstmt = con.prepareStatement(insertSql);
 			
-			pstmt.setInt(1, userDto.getUserId());
-			pstmt.setString(2, userDto.getUsername());
-			pstmt.setString(3, userDto.getPassword());
+			pstmt.setString(1, userDto.getUsername());
+			pstmt.setString(2, userDto.getPassword());
 			
 			ret = pstmt.executeUpdate();
 		} catch (SQLException e) {

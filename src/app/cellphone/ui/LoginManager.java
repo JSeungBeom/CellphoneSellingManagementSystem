@@ -2,6 +2,7 @@ package app.cellphone.ui;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 
 import javax.swing.JButton;
@@ -24,7 +25,7 @@ public class LoginManager extends JFrame {
 	
 	public LoginManager() {
 		setTitle("Login Manager");
-		setSize(350, 200);
+		setSize(250, 200);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		
@@ -80,8 +81,8 @@ public class LoginManager extends JFrame {
 		inputPanel.add(new JLabel("Admin Password"));
 		inputPanel.add(adminPassword);
 		
-		panel.add(inputPanel);
-		panel.add(buttonPanel);
+		panel.add(inputPanel, BorderLayout.NORTH);
+		panel.add(buttonPanel, BorderLayout.SOUTH);
 		
 		loginButton.addActionListener(e -> {
 			AdminDto adminDto = adminLogin(adminUsername.getText(), adminPassword.getText());
@@ -110,8 +111,10 @@ public class LoginManager extends JFrame {
 		
 		JPanel buttonPanel = new JPanel();
 		JButton loginButton = new JButton("로그인");
+		JButton signUpButton = new JButton("회원가입");
 		
 		buttonPanel.add(loginButton);
+		buttonPanel.add(signUpButton);
 		
 		inputPanel.add(new JLabel("User Username"));
 		inputPanel.add(username);
@@ -131,6 +134,11 @@ public class LoginManager extends JFrame {
 			} else {
 				JOptionPane.showMessageDialog(this, "아이디 혹은 패스워드가 일치하지 않습니다.");
 			}
+		});
+		
+		signUpButton.addActionListener(e -> {
+			SignUpDialog signUpDialog = new SignUpDialog(this);
+			signUpDialog.setVisible(true);
 		});
 		
 		return panel;
