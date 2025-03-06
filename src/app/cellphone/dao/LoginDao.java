@@ -9,8 +9,10 @@ import app.cellphone.common.DBManager;
 import app.cellphone.dto.AdminDto;
 import app.cellphone.dto.UserDto;
 
+// 로그인, 회원가입 관련 로직을 담는 DAO
 public class LoginDao {
 	
+	// 회원 가입
 	public int insertUser(UserDto userDto) {
 		int ret = -1;
 		String insertSql = "INSERT INTO USER(USERNAME, PASSWORD) VALUES (?, ?)";
@@ -18,6 +20,7 @@ public class LoginDao {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		
+		// 중복된 유저명이 있는지 확인
 		if(checkDuplicateUser(userDto.getUsername())) {
 			return ret;
 		}
@@ -39,6 +42,7 @@ public class LoginDao {
 		return ret;
 	}
 	
+	// 중복된 유저명 확인
 	public boolean checkDuplicateUser(String username) {
 		String selectSql = "SELECT * FROM USER WHERE USERNAME = ?";
 				
@@ -65,6 +69,7 @@ public class LoginDao {
 		return false;
 	}
 	
+	// 유저 찾기
 	public UserDto detailUser(String username, String password) {
 		String selectSql = "SELECT * FROM USER WHERE USERNAME = ? AND PASSWORD = ?";
 		
@@ -98,6 +103,7 @@ public class LoginDao {
 		return userDto;
 	}
 	
+	// 어드민 찾기
 	public AdminDto detailAdmin(String username, String password) {
 		String selectSql = "SELECT * FROM ADMIN WHERE USERNAME = ? AND PASSWORD = ?";
 		

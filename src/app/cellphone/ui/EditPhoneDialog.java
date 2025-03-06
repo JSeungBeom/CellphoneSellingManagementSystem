@@ -48,8 +48,8 @@ public class EditPhoneDialog extends JDialog {
 		
 		JPanel buttonPanel = new JPanel();
 		
-		editButton = new JButton("Edit");
-		deleteButton = new JButton("Delete");
+		editButton = new JButton("수정");
+		deleteButton = new JButton("삭제");
 		
 		buttonPanel.add(editButton);
 		buttonPanel.add(deleteButton);

@@ -17,9 +17,10 @@ import app.cellphone.dao.LoginDao;
 import app.cellphone.dto.AdminDto;
 import app.cellphone.dto.UserDto;
 
+// 로그인 화면
 public class LoginManager extends JFrame {
 	
-	private CardLayout cardLayout;
+	private CardLayout cardLayout; // 어드민, 유저 로그인을 구분하기 위해 CardLayout 사용
 	private JPanel cardPanel;
 	private LoginDao loginDao = new LoginDao();
 	

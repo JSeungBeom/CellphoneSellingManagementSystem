@@ -45,6 +45,7 @@ public class BuyPhoneDialog extends JDialog {
 		priceField.setEditable(false);
 		countField = new JTextField(String.valueOf(phoneDto.getCount()));
 		countField.setEditable(false);
+		// JSpinner를 이용한 개수 조절
 		JSpinner spinner = new JSpinner(new SpinnerNumberModel(1, 0, 100, 1));
 		
 		inputPanel.add(new JLabel("Phone Id"));
@@ -86,7 +87,7 @@ public class BuyPhoneDialog extends JDialog {
 			
 			int ret = parent.orderPhone(orderDto);
 			
-			if(ret == -1) {
+			if(ret == -1) { // 재고가 없는 경우, 즉 재고 - 구매 수량 < 0인 경우
 				JOptionPane.showMessageDialog(this, "재고 수량을 확인해주세요!");
 			} else {
 				JOptionPane.showMessageDialog(this, "주문이 성공적으로 처리되었습니다.");

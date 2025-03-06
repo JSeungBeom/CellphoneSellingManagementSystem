@@ -13,6 +13,7 @@ import javax.swing.JTextField;
 import app.cellphone.dao.LoginDao;
 import app.cellphone.dto.UserDto;
 
+// 회원가입 화면
 public class SignUpDialog extends JDialog {
 
 	private JTextField usernameField, passwordField;
@@ -51,9 +52,9 @@ public class SignUpDialog extends JDialog {
 			String username = usernameField.getText();
 			String password = passwordField.getText();
 			
-			if(username.isBlank()) {
+			if(username.isBlank()) { // 사용자명 입력 X
 				JOptionPane.showMessageDialog(this, "사용자명을 입력해주세요.");
-			} else if(password.isBlank()) {
+			} else if(password.isBlank()) { // 패스워드 입력 X
 				JOptionPane.showMessageDialog(this, "패스워드를 입력해주세요.");
 			}
 			else {
@@ -63,7 +64,7 @@ public class SignUpDialog extends JDialog {
 				
 				int ret = signUp(userDto);
 				
-				if(ret == -1) {
+				if(ret == -1) { // 사용자명 중복
 					JOptionPane.showMessageDialog(this, "중복된 사용자명이 존재합니다.");
 				} else {
 					dispose();

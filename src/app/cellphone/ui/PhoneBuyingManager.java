@@ -19,6 +19,7 @@ import app.cellphone.dao.PhoneDao;
 import app.cellphone.dto.OrderDto;
 import app.cellphone.dto.PhoneDto;
 
+// 유저의 휴대폰 구매 화면
 public class PhoneBuyingManager extends JFrame {
 	
 	private JTable table;
@@ -71,9 +72,10 @@ public class PhoneBuyingManager extends JFrame {
 		add(new JScrollPane(table), BorderLayout.CENTER);
 		add(buttonPanel, BorderLayout.SOUTH);
 		
+		// 검색
 		searchButton.addActionListener(e -> {
 			String word = searchWordField.getText();
-			if(!word.isBlank()) {
+			if(!word.isBlank()) { 
 				listPhone(word);
 			} else {
 				listPhone();

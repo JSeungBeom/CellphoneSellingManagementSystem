@@ -125,6 +125,7 @@ public class PhoneDao {
 		return list;
 	}
 	
+	// 검색 기능
 	public List<PhoneDto> detailPhone(String name) {
 		String selectSql = "SELECT * FROM PHONE WHERE NAME LIKE ?;";
 		

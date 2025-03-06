@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+// JDBC를 편리하게 사용할 수 있게 해주는 Utility Class
 public class DBManager {
 	static String url = "jdbc:mysql://localhost:3306/cellphonedb";
 	static String user = "root";

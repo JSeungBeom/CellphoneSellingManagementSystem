@@ -16,6 +16,7 @@ import javax.swing.table.DefaultTableModel;
 import app.cellphone.dao.PhoneDao;
 import app.cellphone.dto.PhoneDto;
 
+// 관리자(어드민)의 휴대폰 관리 화면
 public class PhoneManager extends JFrame {
 	
 	private JTable table;
