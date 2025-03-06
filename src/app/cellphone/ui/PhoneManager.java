@@ -68,6 +68,8 @@ public class PhoneManager extends JFrame {
 				JOptionPane.showMessageDialog(this, "기종을 선택하세요");
 			}
 		});
+		
+		listButton.addActionListener( e -> listPhone() );
 	}
 	
 	private void clearTable() {
