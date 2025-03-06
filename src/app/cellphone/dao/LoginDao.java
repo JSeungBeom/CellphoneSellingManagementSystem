@@ -18,6 +18,10 @@ public class LoginDao {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		
+		if(checkDuplicateUser(userDto.getUsername())) {
+			return ret;
+		}
+		
 		try {
 			con = DBManager.getConnection();
 			pstmt = con.prepareStatement(insertSql);
@@ -33,6 +37,32 @@ public class LoginDao {
 		}
 		
 		return ret;
+	}
+	
+	public boolean checkDuplicateUser(String username) {
+		String selectSql = "SELECT * FROM USER WHERE USERNAME = ?";
+				
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			con = DBManager.getConnection();
+			pstmt = con.prepareStatement(selectSql);
+			
+			pstmt.setString(1, username);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next())
+				return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBManager.releaseConnection(rs, pstmt, con);
+		}
+		
+		return false;
 	}
 	
 	public UserDto detailUser(String username, String password) {

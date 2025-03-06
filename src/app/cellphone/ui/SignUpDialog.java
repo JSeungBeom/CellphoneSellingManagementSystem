@@ -65,9 +65,10 @@ public class SignUpDialog extends JDialog {
 				
 				if(ret == -1) {
 					JOptionPane.showMessageDialog(this, "중복된 사용자명이 존재합니다.");
-				} 
+				} else {
+					dispose();
+				}
 				
-				dispose();
 			}
 		});
 		
