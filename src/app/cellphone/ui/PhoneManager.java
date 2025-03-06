@@ -20,7 +20,7 @@ public class PhoneManager extends JFrame {
 	
 	private JTable table;
 	private DefaultTableModel tableModel; 
-	private JButton addButton, editButton, listButton;
+	private JButton addButton, editButton, listButton, viewOrderButton;
 	private PhoneDao phoneDao = new PhoneDao();
 	
 	public PhoneManager() {
@@ -43,11 +43,13 @@ public class PhoneManager extends JFrame {
 		addButton = new JButton("등록");
 		editButton = new JButton("수정 / 삭제");
 		listButton = new JButton("목록");
+		viewOrderButton = new JButton("주문 현황");
 		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.add(addButton);
 		buttonPanel.add(editButton);
 		buttonPanel.add(listButton);
+		buttonPanel.add(viewOrderButton);
 		
 		setLayout(new BorderLayout());
 		add(new JScrollPane(table), BorderLayout.CENTER);
@@ -69,6 +71,11 @@ public class PhoneManager extends JFrame {
 		});
 		
 		listButton.addActionListener( e -> listPhone() );
+		
+		viewOrderButton.addActionListener(e -> {
+			AdminViewOrderDialog viewDialog = new AdminViewOrderDialog(this);
+			viewDialog.setVisible(true);
+		});
 	}
 	
 	private void clearTable() {
