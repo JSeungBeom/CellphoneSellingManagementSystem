@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
@@ -69,9 +70,14 @@ public class EditPhoneDialog extends JDialog {
 		});
 		
 		deleteButton.addActionListener(e -> {
-			parent.deletePhone(phoneId);
+			int ret = parent.deletePhone(phoneId);
 			
-			dispose();
+			if(ret == -1) {
+				JOptionPane.showMessageDialog(this, "주문 내역이 있는 상품은 삭제할 수 없습니다!");
+			}
+			else {
+				dispose();
+			}
 		});
 	}
 }

@@ -110,12 +110,12 @@ public class PhoneManager extends JFrame {
 		}
 	}
 	
-	void deletePhone(int phoneId) {
+	int deletePhone(int phoneId) {
 		int ret = phoneDao.deletePhone(phoneId);
 		
-		if(ret > 0) {
-			listPhone();
-		}
+		listPhone();
+		
+		return ret;
 	}
 	
 	PhoneDto detailPhone(int phoneId) {

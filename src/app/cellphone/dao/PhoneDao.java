@@ -82,7 +82,7 @@ public class PhoneDao {
 			
 			ret = pstmt.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			return ret;
 		} finally {
 			DBManager.releaseConnection(pstmt, con);
 		}
