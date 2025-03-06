@@ -69,7 +69,7 @@ public class PhoneDao {
 	
 	public int deletePhone(int phoneId) {
 		int ret = -1;
-		String updateSql = "DELETE FROM PHONE WHERE PHONEID = ?";
+		String updateSql = "DELETE FROM PHONE WHERE PHONE_ID = ?";
 		
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -138,6 +138,40 @@ public class PhoneDao {
 			pstmt = con.prepareStatement(selectSql);
 			
 			pstmt.setString(1, name);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				phoneDto = new PhoneDto();
+				
+				phoneDto.setPhoneId(rs.getInt("phone_id"));
+				phoneDto.setBrand(rs.getString("brand"));
+				phoneDto.setName(rs.getString("name"));
+				phoneDto.setPrice(rs.getInt("price"));
+				phoneDto.setCount(rs.getInt("count"));
+				
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBManager.releaseConnection(rs, pstmt, con);
+		}
+		
+		return phoneDto;
+	}
+	
+	public PhoneDto detailPhone(int phoneId) {
+		String selectSql = "SELECT * FROM PHONE WHERE PHONE_ID = ?";
+		
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		PhoneDto phoneDto = null;
+		
+		try {
+			con = DBManager.getConnection();
+			pstmt = con.prepareStatement(selectSql);
+			
+			pstmt.setInt(1, phoneId);
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
