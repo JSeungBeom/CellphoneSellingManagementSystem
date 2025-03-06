@@ -8,6 +8,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import app.cellphone.dao.LoginDao;
@@ -30,7 +31,7 @@ public class SignUpDialog extends JDialog {
 		inputPanel.setLayout(new GridLayout(2, 2));
 		
 		usernameField = new JTextField();
-		passwordField = new JTextField();
+		passwordField = new JPasswordField();
 		
 		inputPanel.add(new JLabel("Username"));
 		inputPanel.add(usernameField);

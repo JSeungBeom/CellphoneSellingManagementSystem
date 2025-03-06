@@ -2,7 +2,6 @@ package app.cellphone.ui;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 
 import javax.swing.JButton;
@@ -10,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
@@ -70,7 +70,7 @@ public class LoginManager extends JFrame {
 		inputPanel.setLayout(new GridLayout(2, 2));
 		
 		JTextField adminUsername = new JTextField();
-		JTextField adminPassword = new JTextField();
+		JTextField adminPassword = new JPasswordField();
 		
 		JPanel buttonPanel = new JPanel();
 		JButton loginButton = new JButton("로그인");
@@ -108,7 +108,7 @@ public class LoginManager extends JFrame {
 		inputPanel.setLayout(new GridLayout(2, 2));
 		
 		JTextField username = new JTextField();
-		JTextField password = new JTextField();
+		JTextField password = new JPasswordField();
 		
 		JPanel buttonPanel = new JPanel();
 		JButton loginButton = new JButton("로그인");
