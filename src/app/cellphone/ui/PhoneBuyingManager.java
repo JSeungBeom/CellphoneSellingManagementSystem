@@ -7,6 +7,7 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -75,6 +76,18 @@ public class PhoneBuyingManager extends JFrame {
 				listPhone();
 			}
 		});
+		
+		buyButton.addActionListener(e -> {
+			int selectedRow = table.getSelectedRow();
+			if(selectedRow >= 0) {
+				BuyPhoneDialog buyDialog = new BuyPhoneDialog(this, this.tableModel, selectedRow, userId);
+				buyDialog.setVisible(true);
+			} else {
+				JOptionPane.showMessageDialog(this, "기종을 선택하세요");
+			}
+		});
+		
+		listButton.addActionListener( e -> listPhone() );
 	}
 	
 	private void clearTable() {
@@ -101,5 +114,9 @@ public class PhoneBuyingManager extends JFrame {
 			tableModel.addRow(new Object[] {phoneDto.getPhoneId(), phoneDto.getBrand(),
 					phoneDto.getName(), phoneDto.getPrice(), phoneDto.getCount()});
 		}
+	}
+	
+	PhoneDto detailPhone(int phoneId) {
+		return phoneDao.detailPhone(phoneId);
 	}
 }
