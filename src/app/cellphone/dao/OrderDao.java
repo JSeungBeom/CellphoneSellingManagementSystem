@@ -116,4 +116,38 @@ public class OrderDao {
 		
 		return list;
 	}
+	
+	public List<OrderDto> listOrder() {
+		String selectSql = "SELECT * FROM ORDERS";
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<OrderDto> list = new ArrayList<>();
+		try {
+			con = DBManager.getConnection();
+			pstmt = con.prepareStatement(selectSql);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				int orderId = rs.getInt("order_id");
+				int userId = rs.getInt("user_id");
+				int phoneId = rs.getInt("phone_id");
+				int saleprice = rs.getInt("saleprice");
+				int ordercount = rs.getInt("ordercount");
+				Timestamp orderdate = rs.getTimestamp("orderdate");
+				
+				OrderDto orderDto = new OrderDto(orderId, userId, phoneId,
+						saleprice, ordercount, orderdate);
+				
+				list.add(orderDto);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBManager.releaseConnection(rs, pstmt, con);
+		}
+		
+		return list;
+	}
 }
