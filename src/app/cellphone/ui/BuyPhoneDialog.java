@@ -62,8 +62,8 @@ public class BuyPhoneDialog extends JDialog {
 		
 		JPanel buttonPanel = new JPanel();
 		
-		buyButton = new JButton("Buy");
-		cancelButton = new JButton("Cancel");
+		buyButton = new JButton("구매");
+		cancelButton = new JButton("취소");
 		
 		buttonPanel.add(buyButton);
 		buttonPanel.add(cancelButton);
