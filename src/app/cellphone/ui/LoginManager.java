@@ -13,6 +13,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import app.cellphone.common.HashManager;
 import app.cellphone.dao.LoginDao;
 import app.cellphone.dto.AdminDto;
 import app.cellphone.dto.UserDto;
@@ -126,7 +127,7 @@ public class LoginManager extends JFrame {
 		panel.add(buttonPanel);
 		
 		loginButton.addActionListener(e -> {
-			UserDto userDto = userLogin(username.getText(), password.getText());
+			UserDto userDto = userLogin(username.getText(), HashManager.hashPassword(password.getText()));
 			
 			if(userDto != null) {
 				PhoneBuyingManager phoneBuyingManager = new PhoneBuyingManager(userDto.getUserId());

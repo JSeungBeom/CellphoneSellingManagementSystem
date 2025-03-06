@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import app.cellphone.common.HashManager;
 import app.cellphone.dao.LoginDao;
 import app.cellphone.dto.UserDto;
 
@@ -51,7 +52,7 @@ public class SignUpDialog extends JDialog {
 		
 		signUpButton.addActionListener(e -> {
 			String username = usernameField.getText();
-			String password = passwordField.getText();
+			String password = HashManager.hashPassword(passwordField.getText());
 			
 			if(username.isBlank()) { // 사용자명 입력 X
 				JOptionPane.showMessageDialog(this, "사용자명을 입력해주세요.");
@@ -68,6 +69,7 @@ public class SignUpDialog extends JDialog {
 				if(ret == -1) { // 사용자명 중복
 					JOptionPane.showMessageDialog(this, "중복된 사용자명이 존재합니다.");
 				} else {
+					JOptionPane.showMessageDialog(this, "회원가입 성공!");
 					dispose();
 				}
 				
