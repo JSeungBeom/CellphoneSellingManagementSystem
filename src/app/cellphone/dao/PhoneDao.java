@@ -126,7 +126,7 @@ public class PhoneDao {
 	}
 	
 	public PhoneDto detailPhone(String name) {
-		String selectSql = "SELECT * FROM PHONE WHERE NAME = ?";
+		String selectSql = "SELECT * FROM PHONE WHERE NAME LIKE ?";
 		
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -135,7 +135,7 @@ public class PhoneDao {
 		
 		try {
 			con = DBManager.getConnection();
-			pstmt = con.prepareStatement(selectSql);
+			pstmt = con.prepareStatement("%" + selectSql + "%");
 			
 			pstmt.setString(1, name);
 			rs = pstmt.executeQuery();

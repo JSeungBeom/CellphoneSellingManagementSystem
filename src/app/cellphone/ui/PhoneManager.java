@@ -112,10 +112,4 @@ public class PhoneManager extends JFrame {
 	PhoneDto detailPhone(int phoneId) {
 		return phoneDao.detailPhone(phoneId);
 	}
-	
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater( () -> {
-			new PhoneManager().setVisible(true);
-		});
-	}
 }
