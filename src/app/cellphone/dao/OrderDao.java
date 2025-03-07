@@ -11,6 +11,7 @@ import java.util.List;
 import app.cellphone.common.DBManager;
 import app.cellphone.dto.OrderDto;
 import app.cellphone.dto.PhoneDto;
+import app.cellphone.dto.UserOrderDto;
 
 public class OrderDao {
 	
@@ -80,13 +81,13 @@ public class OrderDao {
 		return ret;
 	}
 	
-	public List<OrderDto> listOrder(int userId) {
-		String selectSql = "SELECT * FROM ORDERS WHERE USER_ID = ?";
+	public List<UserOrderDto> listOrder(int userId) {
+		String selectSql = "SELECT ORDER_ID, BRAND, NAME, SALEPRICE, ORDERCOUNT, ORDERDATE "
+				+ "FROM ORDERS JOIN PHONE USING (PHONE_ID) WHERE USER_ID = ?";
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		List<OrderDto> list = new ArrayList<>();
-		
+		List<UserOrderDto> list = new ArrayList<>();
 		
 		try {
 			con = DBManager.getConnection();
@@ -98,15 +99,16 @@ public class OrderDao {
 			
 			while(rs.next()) {
 				int orderId = rs.getInt("order_id");
-				int phoneId = rs.getInt("phone_id");
+				String brand = rs.getString("brand");
+				String name = rs.getString("name");
 				int saleprice = rs.getInt("saleprice");
 				int ordercount = rs.getInt("ordercount");
 				Timestamp orderdate = rs.getTimestamp("orderdate");
 				
-				OrderDto orderDto = new OrderDto(orderId, userId, phoneId,
+				UserOrderDto userOrderDto = new UserOrderDto(orderId, brand, name,
 						saleprice, ordercount, orderdate);
 				
-				list.add(orderDto);
+				list.add(userOrderDto);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

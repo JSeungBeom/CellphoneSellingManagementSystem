@@ -13,6 +13,7 @@ import javax.swing.table.DefaultTableModel;
 
 import app.cellphone.dao.OrderDao;
 import app.cellphone.dto.OrderDto;
+import app.cellphone.dto.UserOrderDto;
 
 public class UserViewOrderDialog extends JDialog {
 	
@@ -27,7 +28,7 @@ public class UserViewOrderDialog extends JDialog {
 		setLayout(new BorderLayout());
 		setLocationRelativeTo(parent);
 		
-		tableModel = new DefaultTableModel(new Object[] {"Order ID", "Phone_ID", "Saleprice", "Ordercount", "Orderdate"}, 0) {
+		tableModel = new DefaultTableModel(new Object[] {"Order ID", "Brand", "Name", "Saleprice", "Ordercount", "Orderdate"}, 0) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
@@ -72,11 +73,11 @@ public class UserViewOrderDialog extends JDialog {
 	private void listOrder(int userId) {
 		clearTable();
 		
-		List<OrderDto> orderList = orderDao.listOrder(userId);
+		List<UserOrderDto> orderList = orderDao.listOrder(userId);
 		JOptionPane.showMessageDialog(this, "조회된 주문 개수: " + orderList.size());
 		
-		for(OrderDto orderDto : orderList) {
-			tableModel.addRow(new Object[] {orderDto.getOrderId(), orderDto.getPhoneId(),
+		for(UserOrderDto orderDto : orderList) {
+			tableModel.addRow(new Object[] {orderDto.getOrderId(), orderDto.getBrand(), orderDto.getName(),
 					orderDto.getSaleprice(), orderDto.getOrdercount(), orderDto.getOrderdate()});
 		}
 	}
@@ -84,10 +85,10 @@ public class UserViewOrderDialog extends JDialog {
 	private void refreshOrder(int userId) {
 		clearTable();
 		
-		List<OrderDto> orderList = orderDao.listOrder(userId);
+		List<UserOrderDto> orderList = orderDao.listOrder(userId);
 		
-		for(OrderDto orderDto : orderList) {
-			tableModel.addRow(new Object[] {orderDto.getOrderId(), orderDto.getPhoneId(),
+		for(UserOrderDto orderDto : orderList) {
+			tableModel.addRow(new Object[] {orderDto.getOrderId(), orderDto.getBrand(), orderDto.getName(),
 					orderDto.getSaleprice(), orderDto.getOrdercount(), orderDto.getOrderdate()});
 		}
 	}
