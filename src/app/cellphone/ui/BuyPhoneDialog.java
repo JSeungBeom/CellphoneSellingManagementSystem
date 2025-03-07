@@ -46,7 +46,7 @@ public class BuyPhoneDialog extends JDialog {
 		countField = new JTextField(String.valueOf(phoneDto.getCount()));
 		countField.setEditable(false);
 		// JSpinner를 이용한 개수 조절
-		JSpinner spinner = new JSpinner(new SpinnerNumberModel(1, 0, 100, 1));
+		JSpinner spinner = new JSpinner(new SpinnerNumberModel(1, 0, 10000, 1));
 		
 		inputPanel.add(new JLabel("Phone Id"));
 		inputPanel.add(phoneIdField);
