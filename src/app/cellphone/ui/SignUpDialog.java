@@ -52,7 +52,7 @@ public class SignUpDialog extends JDialog {
 		
 		signUpButton.addActionListener(e -> {
 			String username = usernameField.getText();
-			String password = HashManager.hashPassword(passwordField.getText());
+			String password = passwordField.getText();
 			
 			if(username.isBlank()) { // 사용자명 입력 X
 				JOptionPane.showMessageDialog(this, "사용자명을 입력해주세요.");
@@ -60,11 +60,7 @@ public class SignUpDialog extends JDialog {
 				JOptionPane.showMessageDialog(this, "패스워드를 입력해주세요.");
 			}
 			else {
-				UserDto userDto = new UserDto();
-				userDto.setUsername(username);
-				userDto.setPassword(password);
-				
-				int ret = signUp(userDto);
+				int ret = signUp(username, password);
 				
 				if(ret == -1) { // 사용자명 중복
 					JOptionPane.showMessageDialog(this, "중복된 사용자명이 존재합니다.");
@@ -79,7 +75,7 @@ public class SignUpDialog extends JDialog {
 		cancelButton.addActionListener(e -> dispose());
 	}
 	
-	private int signUp(UserDto userDto) {
-		return loginDao.insertUser(userDto);
+	private int signUp(String username, String password) {
+		return loginDao.insertUser(username, password);
 	}
 }

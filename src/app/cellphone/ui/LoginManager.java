@@ -127,10 +127,15 @@ public class LoginManager extends JFrame {
 		panel.add(buttonPanel);
 		
 		loginButton.addActionListener(e -> {
-			UserDto userDto = userLogin(username.getText(), HashManager.hashPassword(password.getText()));
+			String userName = username.getText();
+			String passWord = password.getText();
+			String salt = findSalt(userName);
 			
-			if(userDto != null) {
-				PhoneBuyingManager phoneBuyingManager = new PhoneBuyingManager(userDto.getUserId());
+			UserDto loginInfo = userLogin(userName, passWord, salt);
+			
+			if(loginInfo != null) {
+				JOptionPane.showMessageDialog(this, "로그인 되었습니다.");
+				PhoneBuyingManager phoneBuyingManager = new PhoneBuyingManager(loginInfo.getUserId());
 				phoneBuyingManager.setVisible(true);
 				dispose();
 			} else {
@@ -150,8 +155,12 @@ public class LoginManager extends JFrame {
 		return loginDao.detailAdmin(username, password);
 	}
 	
-	private UserDto userLogin(String username, String password) {
-		return loginDao.detailUser(username, password);
+	private UserDto userLogin(String username, String password, String salt) {
+		return loginDao.detailUser(username, password, salt);
+	}
+	
+	private String findSalt(String username) {
+		return loginDao.detailSalt(username);
 	}
 	
 	public static void main(String[] args) {

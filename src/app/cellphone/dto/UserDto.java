@@ -4,14 +4,16 @@ public class UserDto {
 	private int userId;
 	private String username;
 	private String password;
+	private String salt;
 	
 	public UserDto() {}
-
-	public UserDto(int userId, String username, String password) {
+	
+	public UserDto(int userId, String username, String password, String salt) {
 		super();
 		this.userId = userId;
 		this.username = username;
 		this.password = password;
+		this.salt = salt;
 	}
 
 	public int getUserId() {
@@ -37,6 +39,13 @@ public class UserDto {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
 	
 }
