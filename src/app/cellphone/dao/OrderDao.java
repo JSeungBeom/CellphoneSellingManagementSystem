@@ -150,4 +150,70 @@ public class OrderDao {
 		
 		return list;
 	}
+	
+	// 주문 취소 & 수량 조정
+	public void cancelOrder(OrderDto orderDto) {
+		String deleteSql = "DELETE FROM ORDERS WHERE ORDER_ID = ?";
+		String updateSql = "UPDATE PHONE SET COUNT = COUNT + ? WHERE PHONE_ID = ?";
+		Connection con = null;
+		PreparedStatement deletePstmt = null;
+		PreparedStatement updatePstmt = null;
+		
+		try {
+			con = DBManager.getConnection();
+			con.setAutoCommit(false); // 트랜잭션 시작
+			
+			deletePstmt = con.prepareStatement(deleteSql);
+			deletePstmt.setInt(1, orderDto.getOrderId());
+			deletePstmt.executeUpdate();
+			
+			updatePstmt = con.prepareStatement(updateSql);
+			updatePstmt.setInt(1, orderDto.getOrdercount());
+			updatePstmt.setInt(2, orderDto.getPhoneId());
+			updatePstmt.executeUpdate();
+			
+			con.commit(); // 트랜잭션 종료
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBManager.releaseConnection(deletePstmt, updatePstmt, con);
+		}
+		
+	}
+	 
+	public OrderDto detailOrder(int orderId) {
+		String selectSql = "SELECT * FROM ORDERS WHERE ORDER_ID = ?";
+		
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		OrderDto orderDto = null;
+		
+		try {
+			con = DBManager.getConnection();
+			pstmt = con.prepareStatement(selectSql);
+			
+			pstmt.setInt(1, orderId);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				int userId = rs.getInt("user_id");
+				int phoneId = rs.getInt("phone_id");
+				int saleprice = rs.getInt("saleprice");
+				int ordercount = rs.getInt("ordercount");
+				Timestamp orderdate = rs.getTimestamp("orderdate");
+				
+				
+				orderDto = new OrderDto(orderId, userId, phoneId,
+						saleprice, ordercount, orderdate);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBManager.releaseConnection(rs, pstmt, con);
+		}
+		
+		return orderDto;
+	}
 }

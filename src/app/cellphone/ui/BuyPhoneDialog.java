@@ -91,8 +91,8 @@ public class BuyPhoneDialog extends JDialog {
 				JOptionPane.showMessageDialog(this, "재고 수량을 확인해주세요!");
 			} else {
 				JOptionPane.showMessageDialog(this, "주문이 성공적으로 처리되었습니다.");
+				dispose();
 			}
-			dispose();
 		});
 		
 		cancelButton.addActionListener(e -> {

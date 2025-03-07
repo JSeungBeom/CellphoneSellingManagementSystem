@@ -104,7 +104,7 @@ public class PhoneBuyingManager extends JFrame {
 		tableModel.setRowCount(0);
 	}
 	
-	private void listPhone() {
+	void listPhone() {
 		clearTable();
 		
 		List<PhoneDto> phoneList = phoneDao.listPhone();

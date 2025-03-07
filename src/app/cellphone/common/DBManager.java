@@ -42,4 +42,14 @@ public class DBManager {
 			e.printStackTrace();
 		}
 	}
+	
+	public static void releaseConnection(PreparedStatement pstmt, PreparedStatement pstmt2, Connection con) {
+		try {
+			if(pstmt != null) pstmt.close();
+			if(pstmt2 != null) pstmt2.close();
+			if(con != null) con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }
