@@ -22,60 +22,48 @@ public class OrderDao {
 		int ret = -1;
 		String insertSql = "INSERT INTO ORDERS (USER_ID, PHONE_ID, SALEPRICE, ORDERCOUNT, ORDERDATE) "
 				+ "VALUES (?, ?, ?, ?, ?)";
+		String updateSql = "UPDATE PHONE SET COUNT = ? WHERE PHONE_ID = ?";
+
+		int stock = phoneDao.detailPhone(orderDto.getPhoneId()).getCount();
 		
 		Connection con = null;
-		PreparedStatement pstmt = null;
+		PreparedStatement insertPstmt = null;
+		PreparedStatement updatePstmt = null;
+		
+		int restStock = stock - orderDto.getOrdercount();
 		
 		// 재고가 없을 시
-		if(adjustStock(orderDto.getPhoneId(), orderDto.getOrdercount()) == -1)
+		if(restStock < 0)
 			return ret;
 		
 		try {
 			con = DBManager.getConnection();
-			pstmt = con.prepareStatement(insertSql);
+			con.setAutoCommit(false); // 트랜잭션 시작
 			
-			pstmt.setInt(1, orderDto.getUserId());
-			pstmt.setInt(2, orderDto.getPhoneId());
-			pstmt.setInt(3, orderDto.getSaleprice());
-			pstmt.setInt(4, orderDto.getOrdercount());
-			pstmt.setTimestamp(5, orderDto.getOrderdate());
+			// 주문 
+			insertPstmt = con.prepareStatement(insertSql);
 			
-			ret = pstmt.executeUpdate();
+			insertPstmt.setInt(1, orderDto.getUserId());
+			insertPstmt.setInt(2, orderDto.getPhoneId());
+			insertPstmt.setInt(3, orderDto.getSaleprice());
+			insertPstmt.setInt(4, orderDto.getOrdercount());
+			insertPstmt.setTimestamp(5, orderDto.getOrderdate());
+			
+			ret += insertPstmt.executeUpdate();
+			
+			// 재고 조정
+			updatePstmt = con.prepareStatement(updateSql);
+			
+			updatePstmt.setInt(1, restStock);
+			updatePstmt.setInt(2, orderDto.getPhoneId());
+			
+			ret += updatePstmt.executeUpdate();
+			
+			con.commit(); // 트랜잭션 끝
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DBManager.releaseConnection(pstmt, con);
-		}
-		
-		return ret;
-	}
-	
-	// 수량 조정
-	private int adjustStock(int phoneId, int ordercount) {
-		int ret = -1;
-		String updateSql = "UPDATE PHONE SET COUNT = ? WHERE PHONE_ID = ?";
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		PhoneDto phoneDto = phoneDao.detailPhone(phoneId);
-		
-		int count = phoneDto.getCount() - ordercount;
-		
-		if(count < 0) {
-			return ret;
-		}
-		
-		try {
-			con = DBManager.getConnection();
-			pstmt = con.prepareStatement(updateSql);
-			
-			pstmt.setInt(1, count);
-			pstmt.setInt(2, phoneId);
-			
-			ret = pstmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			DBManager.releaseConnection(pstmt, con);
+			DBManager.releaseConnection(insertPstmt, con);
 		}
 		
 		return ret;
