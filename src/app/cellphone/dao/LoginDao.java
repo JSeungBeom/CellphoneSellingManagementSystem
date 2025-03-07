@@ -15,28 +15,40 @@ public class LoginDao {
 	// 회원 가입
 	public int insertUser(UserDto userDto) {
 		int ret = -1;
+		String selectSql = "SELECT * FROM USER WHERE USERNAME = ?";
 		String insertSql = "INSERT INTO USER(USERNAME, PASSWORD) VALUES (?, ?)";
-		
+
 		Connection con = null;
-		PreparedStatement pstmt = null;
-		
-		// 중복된 유저명이 있는지 확인
-		if(checkDuplicateUser(userDto.getUsername())) {
-			return ret;
-		}
+		PreparedStatement selectPstmt = null;
+		PreparedStatement insertPstmt = null;
+		ResultSet rs = null;
 		
 		try {
 			con = DBManager.getConnection();
-			pstmt = con.prepareStatement(insertSql);
+			con.setAutoCommit(false);
+				
+			// 중복 회원 확인 로직
+			selectPstmt = con.prepareStatement(selectSql);
+			selectPstmt.setString(1, userDto.getUsername());
 			
-			pstmt.setString(1, userDto.getUsername());
-			pstmt.setString(2, userDto.getPassword());
+			rs = selectPstmt.executeQuery();
 			
-			ret = pstmt.executeUpdate();
+			if(rs.next())
+				return ret;
+			
+			// 회원가입
+			insertPstmt = con.prepareStatement(insertSql);
+			
+			insertPstmt.setString(1, userDto.getUsername());
+			insertPstmt.setString(2, userDto.getPassword());
+			
+			ret = insertPstmt.executeUpdate();
+			
+			con.commit(); 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DBManager.releaseConnection(pstmt, con);
+			DBManager.releaseConnection(rs, selectPstmt, insertPstmt, con);
 		}
 		
 		return ret;

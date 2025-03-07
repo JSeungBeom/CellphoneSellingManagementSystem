@@ -43,9 +43,20 @@ public class DBManager {
 		}
 	}
 	
-	public static void releaseConnection(PreparedStatement pstmt, PreparedStatement pstmt2, Connection con) {
+	public static void releaseConnection(PreparedStatement pstmt1, PreparedStatement pstmt2, Connection con) {
 		try {
-			if(pstmt != null) pstmt.close();
+			if(pstmt1 != null) pstmt1.close();
+			if(pstmt2 != null) pstmt2.close();
+			if(con != null) con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void releaseConnection(ResultSet rs, PreparedStatement pstmt1, PreparedStatement pstmt2, Connection con) {
+		try {
+			if(rs != null) rs.close();
+			if(pstmt1 != null) pstmt1.close();
 			if(pstmt2 != null) pstmt2.close();
 			if(con != null) con.close();
 		} catch (SQLException e) {
