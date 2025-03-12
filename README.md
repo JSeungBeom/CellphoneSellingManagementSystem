@@ -2,8 +2,6 @@
 LG U+ 유레카 과정 <br><br>
 JDBC와 Swing을 이용한 2 Tier Architecture의 휴대폰 판매관리 시스템 구현 미니 프로젝트
 <br />
-## 화면 구성
-<br />
 
 ## ⚙ 기술 스택
 ### Back-end
@@ -19,10 +17,10 @@ JDBC와 Swing을 이용한 2 Tier Architecture의 휴대폰 판매관리 시스�
 
 <br />
 
-## 🛠️ 프로젝트 아키텍쳐
-
+## 🛠️ ERD
+![Image](https://github.com/user-attachments/assets/c7e092cc-4943-4585-bb24-45cd961a3ee4)
 
 <br />
 
 ## 기술적 이슈와 해결 과정
-
+<a href="https://it-developments.tistory.com/22">Hashing</href>
