@@ -6,12 +6,20 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import org.hibernate.jpa.HibernatePersistenceProvider;
 
 import app.cellphone.common.DBManager;
 import app.cellphone.dto.OrderDto;
-import app.cellphone.dto.PhoneDto;
 import app.cellphone.dto.UserOrderDto;
+import app.cellphone.entity.Orders;
+import app.cellphone.entity.Phone;
+import config.MyPersistenceUnitInfo;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.TypedQuery;
 
 public class OrderDao {
 	
@@ -19,191 +27,137 @@ public class OrderDao {
 	
 	// 주문 
 	public int insertOrder(OrderDto orderDto) {
-		int ret = -1;
-		String insertSql = "INSERT INTO ORDERS (USER_ID, PHONE_ID, SALEPRICE, ORDERCOUNT, ORDERDATE) "
-				+ "VALUES (?, ?, ?, ?, ?)";
-		String updateSql = "UPDATE PHONE SET COUNT = ? WHERE PHONE_ID = ?";
-
-		int stock = phoneDao.detailPhone(orderDto.getPhoneId()).getCount();
+		EntityManagerFactory emf = new HibernatePersistenceProvider().createContainerEntityManagerFactory(
+				new MyPersistenceUnitInfo(), new HashMap<>()
+		);
+		EntityManager em = emf.createEntityManager();
 		
-		Connection con = null;
-		PreparedStatement insertPstmt = null;
-		PreparedStatement updatePstmt = null;
+		int stock = phoneDao.detailPhone(orderDto.getPhoneId()).getCount();
 		
 		int restStock = stock - orderDto.getOrdercount();
 		
-		// 재고가 없을 시
-		if(restStock < 0)
-			return ret;
-		
-		try {
-			con = DBManager.getConnection();
-			con.setAutoCommit(false); // 트랜잭션 시작
-			
-			// 주문 
-			insertPstmt = con.prepareStatement(insertSql);
-			
-			insertPstmt.setInt(1, orderDto.getUserId());
-			insertPstmt.setInt(2, orderDto.getPhoneId());
-			insertPstmt.setInt(3, orderDto.getSaleprice());
-			insertPstmt.setInt(4, orderDto.getOrdercount());
-			insertPstmt.setTimestamp(5, orderDto.getOrderdate());
-			
-			ret += insertPstmt.executeUpdate();
-			
-			// 재고 조정
-			updatePstmt = con.prepareStatement(updateSql);
-			
-			updatePstmt.setInt(1, restStock);
-			updatePstmt.setInt(2, orderDto.getPhoneId());
-			
-			ret += updatePstmt.executeUpdate();
-			
-			con.commit(); // 트랜잭션 끝
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			DBManager.releaseConnection(insertPstmt, con);
+		if(restStock < 0) {
+			return -1;
 		}
 		
-		return ret;
+		em.getTransaction().begin();
+		
+		Orders o = new Orders();
+		o.setUserId(orderDto.getUserId());
+		o.setPhoneId(orderDto.getPhoneId());
+		o.setSaleprice(orderDto.getSaleprice());
+		o.setOrdercount(orderDto.getOrdercount());
+		o.setOrderdate(orderDto.getOrderdate());
+		
+		em.persist(o);
+		
+		Phone p = em.find(Phone.class, o.getPhoneId());
+		
+		p.setCount(restStock);
+		
+		em.getTransaction().commit();
+			
+		return 1;
 	}
 	
 	public List<UserOrderDto> listOrder(int userId) {
-		String selectSql = "SELECT ORDER_ID, BRAND, NAME, SALEPRICE, ORDERCOUNT, ORDERDATE "
-				+ "FROM ORDERS JOIN PHONE USING (PHONE_ID) WHERE USER_ID = ?";
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		List<UserOrderDto> list = new ArrayList<>();
+		EntityManagerFactory emf = new HibernatePersistenceProvider().createContainerEntityManagerFactory(
+				new MyPersistenceUnitInfo(), new HashMap<>()
+		);
+		EntityManager em = emf.createEntityManager();
 		
-		try {
-			con = DBManager.getConnection();
-			pstmt = con.prepareStatement(selectSql);
-			
-			pstmt.setInt(1, userId);
-			
-			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
-				int orderId = rs.getInt("order_id");
-				String brand = rs.getString("brand");
-				String name = rs.getString("name");
-				int saleprice = rs.getInt("saleprice");
-				int ordercount = rs.getInt("ordercount");
-				Timestamp orderdate = rs.getTimestamp("orderdate");
-				
-				UserOrderDto userOrderDto = new UserOrderDto(orderId, brand, name,
-						saleprice, ordercount, orderdate);
-				
-				list.add(userOrderDto);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			DBManager.releaseConnection(rs, pstmt, con);
-		}
+		String jpql = "SELECT new app.cellphone.dto.UserOrderDto(o.order_id, p.brand, p.name, o.saleprice, o.ordercount, o.orderdate) " +
+	              "FROM Orders o JOIN Phone p ON p.phone_id = o.phone_id " +
+	              "WHERE o.user_id = :userId";
+
+
+		TypedQuery<UserOrderDto> query = em.createQuery(jpql, UserOrderDto.class);
+		query.setParameter("userId", userId);
 		
-		return list;
+		return query.getResultList();
 	}
 	
 	public List<OrderDto> listOrder() {
-		String selectSql = "SELECT * FROM ORDERS";
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		List<OrderDto> list = new ArrayList<>();
-		try {
-			con = DBManager.getConnection();
-			pstmt = con.prepareStatement(selectSql);
-			
-			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
-				int orderId = rs.getInt("order_id");
-				int userId = rs.getInt("user_id");
-				int phoneId = rs.getInt("phone_id");
-				int saleprice = rs.getInt("saleprice");
-				int ordercount = rs.getInt("ordercount");
-				Timestamp orderdate = rs.getTimestamp("orderdate");
-				
-				OrderDto orderDto = new OrderDto(orderId, userId, phoneId,
-						saleprice, ordercount, orderdate);
-				
-				list.add(orderDto);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			DBManager.releaseConnection(rs, pstmt, con);
-		}
+		EntityManagerFactory emf = new HibernatePersistenceProvider().createContainerEntityManagerFactory(
+				new MyPersistenceUnitInfo(), new HashMap<>()
+		);
+		EntityManager em = emf.createEntityManager();
 		
+		String jpql = "SELECT o FROM Orders o";
+		
+		TypedQuery<Orders> query = em.createQuery(jpql, Orders.class);
+		List<OrderDto> list = new ArrayList<>();
+		
+		for(Orders o : query.getResultList()) {
+			list.add(new OrderDto(o.getOrderId(), o.getUserId(), o.getPhoneId(),
+					o.getSaleprice(), o.getOrdercount(), o.getOrderdate()));
+		}
+				
 		return list;
 	}
 	
 	// 주문 취소 & 수량 조정
 	public void cancelOrder(OrderDto orderDto) {
-		String deleteSql = "DELETE FROM ORDERS WHERE ORDER_ID = ?";
-		String updateSql = "UPDATE PHONE SET COUNT = COUNT + ? WHERE PHONE_ID = ?";
-		Connection con = null;
-		PreparedStatement deletePstmt = null;
-		PreparedStatement updatePstmt = null;
+		EntityManagerFactory emf = new HibernatePersistenceProvider().createContainerEntityManagerFactory(
+				new MyPersistenceUnitInfo(), new HashMap<>()
+		);
+		EntityManager em = emf.createEntityManager();
 		
-		try {
-			con = DBManager.getConnection();
-			con.setAutoCommit(false); // 트랜잭션 시작
-			
-			deletePstmt = con.prepareStatement(deleteSql);
-			deletePstmt.setInt(1, orderDto.getOrderId());
-			deletePstmt.executeUpdate();
-			
-			updatePstmt = con.prepareStatement(updateSql);
-			updatePstmt.setInt(1, orderDto.getOrdercount());
-			updatePstmt.setInt(2, orderDto.getPhoneId());
-			updatePstmt.executeUpdate();
-			
-			con.commit(); // 트랜잭션 종료
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			DBManager.releaseConnection(deletePstmt, updatePstmt, con);
-		}
+		em.getTransaction().begin();
 		
+		Orders orders = em.find(Orders.class, orderDto.getOrderId());
+		em.remove(orders);
+		
+		Phone phone = em.find(Phone.class, orderDto.getPhoneId());
+		phone.setCount(phone.getCount() + orderDto.getOrdercount());
+		
+		em.getTransaction().commit();
 	}
 	 
 	public OrderDto detailOrder(int orderId) {
-		String selectSql = "SELECT * FROM ORDERS WHERE ORDER_ID = ?";
-		
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		OrderDto orderDto = null;
-		
-		try {
-			con = DBManager.getConnection();
-			pstmt = con.prepareStatement(selectSql);
-			
-			pstmt.setInt(1, orderId);
-			
-			rs = pstmt.executeQuery();
-			
-			if(rs.next()) {
-				int userId = rs.getInt("user_id");
-				int phoneId = rs.getInt("phone_id");
-				int saleprice = rs.getInt("saleprice");
-				int ordercount = rs.getInt("ordercount");
-				Timestamp orderdate = rs.getTimestamp("orderdate");
+		EntityManagerFactory emf = new HibernatePersistenceProvider().createContainerEntityManagerFactory(
+				new MyPersistenceUnitInfo(), new HashMap<>()
+		);
+		EntityManager em = emf.createEntityManager();
 				
-				
-				orderDto = new OrderDto(orderId, userId, phoneId,
-						saleprice, ordercount, orderdate);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			DBManager.releaseConnection(rs, pstmt, con);
-		}
+		Orders orders = em.find(Orders.class, orderId);
 		
-		return orderDto;
+		return new OrderDto(orders.getOrderId(), orders.getUserId(), orders.getPhoneId(),
+				orders.getSaleprice(), orders.getOrdercount(), orders.getOrderdate());
+		
+		
+//		String selectSql = "SELECT * FROM ORDERS WHERE ORDER_ID = ?";
+//		
+//		Connection con = null;
+//		PreparedStatement pstmt = null;
+//		ResultSet rs = null;
+//		OrderDto orderDto = null;
+//		
+//		try {
+//			con = DBManager.getConnection();
+//			pstmt = con.prepareStatement(selectSql);
+//			
+//			pstmt.setInt(1, orderId);
+//			
+//			rs = pstmt.executeQuery();
+//			
+//			if(rs.next()) {
+//				int userId = rs.getInt("user_id");
+//				int phoneId = rs.getInt("phone_id");
+//				int saleprice = rs.getInt("saleprice");
+//				int ordercount = rs.getInt("ordercount");
+//				Timestamp orderdate = rs.getTimestamp("orderdate");
+//				
+//				
+//				orderDto = new OrderDto(orderId, userId, phoneId,
+//						saleprice, ordercount, orderdate);
+//			}
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		} finally {
+//			DBManager.releaseConnection(rs, pstmt, con);
+//		}
+//		
+//		return orderDto;
 	}
 }

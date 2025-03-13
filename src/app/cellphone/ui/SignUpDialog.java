@@ -11,9 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import app.cellphone.common.HashManager;
 import app.cellphone.dao.LoginDao;
-import app.cellphone.dto.UserDto;
 
 // 회원가입 화면
 public class SignUpDialog extends JDialog {

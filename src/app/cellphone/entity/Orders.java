@@ -1,17 +1,20 @@
-package app.cellphone.dto;
+package app.cellphone.entity;
 
 import java.sql.Timestamp;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-public class OrderDto{
-	private int orderId;
+@Entity
+public class Orders {
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int order_id;
 	
-	private int userId;
+	private int user_id;
 	
-	private int phoneId;
+	private int phone_id;
 	
 	private int saleprice;
 	
@@ -19,40 +22,40 @@ public class OrderDto{
 	
 	private Timestamp orderdate;
 	
-	public OrderDto() {}
-	
-	public OrderDto(int orderId, int userId, int phoneId, int saleprice, int ordercount, Timestamp orderdate) {
+	public Orders() {};
+
+	public Orders(int orderId, int userId, int phoneId, int saleprice, int ordercount, Timestamp orderdate) {
 		super();
-		this.orderId = orderId;
-		this.userId = userId;
-		this.phoneId = phoneId;
+		this.order_id = orderId;
+		this.user_id = userId;
+		this.phone_id = phoneId;
 		this.saleprice = saleprice;
 		this.ordercount = ordercount;
 		this.orderdate = orderdate;
 	}
 
 	public int getOrderId() {
-		return orderId;
+		return order_id;
 	}
 
 	public void setOrderId(int orderId) {
-		this.orderId = orderId;
+		this.order_id = orderId;
 	}
 
 	public int getUserId() {
-		return userId;
+		return user_id;
 	}
 
 	public void setUserId(int userId) {
-		this.userId = userId;
+		this.user_id = userId;
 	}
 
 	public int getPhoneId() {
-		return phoneId;
+		return phone_id;
 	}
 
 	public void setPhoneId(int phoneId) {
-		this.phoneId = phoneId;
+		this.phone_id = phoneId;
 	}
 
 	public int getSaleprice() {
@@ -75,8 +78,9 @@ public class OrderDto{
 		return orderdate;
 	}
 
-	public void setOrderdate(Timestamp orderDate) {
-		this.orderdate = orderDate;
+	public void setOrderdate(Timestamp orderdate) {
+		this.orderdate = orderdate;
 	}
+	
 	
 }

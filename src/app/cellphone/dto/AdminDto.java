@@ -1,6 +1,10 @@
 package app.cellphone.dto;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
 public class AdminDto {
+	
 	private int adminId;
 	private String username;
 	private String password;
